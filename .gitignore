@@ -57,3 +57,8 @@ appsettings.Local.json
 # ==========================================
 .DS_Store
 Thumbs.db
+
+# ==========================================
+# Documentación & Fuentes Locales (No subir a GitHub)
+# ==========================================
+docs/sources/
