@@ -5,11 +5,11 @@ public sealed record LoginRequest(
     string? Password);
 
 public sealed record UserResponse(
-    Guid Id,
+    long Id,
     string Username,
     string Email,
     string Name,
-    string Role);
+    string[] Roles);
 
 public sealed record AuthSession(
     UserResponse User,

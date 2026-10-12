@@ -15,9 +15,17 @@ const user = ref<UserResponse | null>(null)
 const errorMessage = ref('')
 const isLoading = ref(true)
 
-const roleLabel = computed(() =>
-  user.value?.role === 'Admin' ? 'Administrador' : 'Usuario',
-)
+const roleLabel = computed(() => {
+  if (!user.value?.roles?.length) return 'Sin rol'
+  const labels: Record<string, string> = {
+    admin: 'Administrador',
+    student: 'Estudiante',
+    social_service_officer: 'Encargado(a) de Servicio Social',
+    internship_coordinator: 'Coordinador(a) de Prácticas Profesionales',
+    department_head: 'Jefe(a) de Departamento Académico',
+  }
+  return user.value.roles.map(r => labels[r] || r).join(', ')
+})
 
 async function loadSession(): Promise<void> {
   isLoading.value = true

@@ -1,4 +1,9 @@
-export type UserRole = 'Admin' | 'User'
+export type UserRole =
+  | 'admin'
+  | 'student'
+  | 'social_service_officer'
+  | 'internship_coordinator'
+  | 'department_head'
 
 export interface LoginRequest {
   username: string
@@ -6,9 +11,9 @@ export interface LoginRequest {
 }
 
 export interface UserResponse {
-  id: string
+  id: number
   username: string
   email: string
   name: string
-  role: UserRole
+  roles: UserRole[]
 }

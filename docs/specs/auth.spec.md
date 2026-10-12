@@ -18,11 +18,11 @@ LoginRequest
   password: string, requerido
 
 UserResponse
-  id: UUID
+  id: integer (BIGINT)
   username: string
   email: string
   name: string
-  role: "Admin" | "User"
+  roles: string[]
 ```
 
 Payload nulo, campo ausente o valor vacío: inválido. Backend recorta espacios externos de `username`. Backend no devuelve entidad de persistencia.
@@ -51,15 +51,17 @@ Respuesta `401` de login usa mensaje genérico. No confirma si cuenta existe, es
 ## JWT
 
 - Firma: HMAC-SHA256.
-- Claims requeridos: `sub`, `username`, `email`, `name`, `role`, `exp`, `iss`, `aud`.
-- `sub` contiene `UserResponse.id`.
-- `role` solo acepta `Admin` o `User`.
+- Claims requeridos: `sub`, `username`, `email`, `name`, `roles`, `exp`, `iss`, `aud`.
+- `sub` contiene `UserResponse.id` en formato numérico textual.
+- `roles` contiene los roles asignados: `admin`, `student`, `social_service_officer`, `internship_coordinator`, `department_head`.
 - Backend valida firma, emisor, audiencia y expiración en cada ruta protegida.
 - `Jwt__SecretKey` vive fuera de Git. API falla al iniciar si falta o tiene menos de 32 bytes UTF-8.
 
 ## Datos demo
 
-- Usuarios activos de desarrollo: `admin` con rol `Admin`; `usuario` con rol `User`.
+- Usuarios activos de desarrollo:
+  - `admin` (id: 1) con rol `admin`.
+  - `usuario` (id: 2) con rol `student`.
 - Contraseña común exclusiva de desarrollo: `TecNM-Demo-2026!`.
 - PostgreSQL guarda solo hashes creados con `PasswordHasher<User>`.
 - Producción no incluye credenciales demo.

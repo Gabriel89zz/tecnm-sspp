@@ -44,7 +44,7 @@ El backend actúa como el único emisor de tokens institucionales, soportando m�
 
 ### Backend (.NET 10)
 - **Firma & Secreto:** Custodia `SecretKey` (HMAC-SHA256).
-- **Claims Estándar:** `sub` (UserId), `email`, `name`, `role`, `exp`, `iss`, `aud`.
+- **Claims Estándar:** `sub` (UserId numérico), `email`, `name`, `roles`, `exp`, `iss`, `aud`.
 - **Validación:** Middleware de autenticación valida firma en cada endpoint protegido.
 - **Respuestas:** Retorna `401 Unauthorized` si el token falta, expiró o está alterado.
 
