@@ -38,6 +38,7 @@ Construir SPA Vue 3 con TypeScript. Primer slice: login local, guard preventivo,
 - Usar `session_exp` solo como guard preventivo. API conserva autoridad.
 - Usar CSS nativo y tokens semánticos. Mantener formulario accesible y responsive.
 - No agregar Pinia ni dependencias sin uso directo.
+- Usar exclusivamente `pnpm` (`pnpm --prefix frontend ...`) para dependencias y scripts. NUNCA usar `npm` ni `yarn`.
 - Cambiar contrato compartido primero cuando cambie API, cookie, DTO o error.
 
 ## Comandos previstos

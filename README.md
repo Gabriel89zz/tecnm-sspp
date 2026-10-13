@@ -157,7 +157,7 @@ frontend/
 │       ├── composables/           # Lógica reactiva compartida (useTheme, etc.)
 │       ├── layouts/               # Layouts principales (MainLayout, AuthLayout)
 │       └── styles/                # Tokens CSS semánticos y temas (Dark/Light)
-├── package.json                   # Dependencias y scripts de npm/pnpm
+├── package.json                   # Dependencias y scripts de pnpm
 ├── tsconfig.json                  # Configuración estricta de TypeScript
 └── vite.config.ts                 # Configuración del bundler y alias de imports
 ```

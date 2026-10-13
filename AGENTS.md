@@ -30,3 +30,4 @@ Punto de entrada maestro para Agentes de Inteligencia Artificial en el proyecto 
 1. **Spec-Driven Development (SDD):** Todo cambio funcional debe actualizar primero su especificación canónica en `docs/specs/` o la especificación local del módulo antes de tocar código.
 2. **Concisión (Skill `caveman`):** Mantener respuestas y documentación técnica concisas, directas y sin explicaciones superfluas.
 3. **Persistencia y Esquemas:** Toda tabla diseñada debe usar PostgreSQL, nomenclatura `snake_case`, PK explícita y FKs con integridad referencial.
+4. **Gestor de Paquetes Frontend (`pnpm`):** Usar estrictamente `pnpm` (`pnpm --prefix frontend ...`) para cualquier comando, instalación de dependencias o compilación en el frontend. **NUNCA usar `npm` ni `yarn`**.

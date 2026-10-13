@@ -78,7 +78,7 @@ Reemplazar destinos por páginas reales al agregar módulos; no crear vistas fic
 
 ## Verificación
 
-- `npm --prefix frontend run build`
+- `pnpm --prefix frontend run build`
 - Desde `frontend`: `node scripts/check-layout.mjs`. Comprueba cuatro composiciones, opciones de marca y navegación agrupada.
 
 ## Posición de sidebar

@@ -125,5 +125,5 @@ const name = ref('')
 
 ## Verificación
 
-- Ejecutar `npm --prefix frontend run build`.
+- Ejecutar `pnpm --prefix frontend run build`.
 - Ejecutar `node scripts/check-layout.mjs` desde `frontend` para validar combinaciones de shell y navegación.
