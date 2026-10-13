@@ -7,7 +7,6 @@ Esta carpeta contiene biblioteca UI compartida del frontend. Toda vista debe reu
 Fuentes visuales obligatorias:
 
 - `frontend/DESIGN.md`: colores, tipografía, espaciado, geometría, elevación y temas.
-- `frontend/dummy/index.html`: referencia visual interactiva.
 - `frontend/src/modules/auth/views/SessionView.vue`: catálogo integrado con componentes reales.
 - `frontend/src/shared/styles/global.css`: tokens y estilos comunes.
 

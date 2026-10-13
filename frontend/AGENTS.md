@@ -62,4 +62,4 @@ Verificación visual prevista: login, error genérico, carga, sesión, logout, r
 
 - [`src/shared/components/`](./src/shared/components/): biblioteca visual reutilizable; [spec](./src/shared/components/specs/components.spec.md).
 
-- [`src/app/layouts/`](./src/app/layouts/MAINLAYOUT.md): MainLayout persistente; configuración independiente de header, sidebar, marca y navegación.
+- [`src/app/layouts/`](./src/app/layouts/): MainLayout persistente; [spec](./src/app/layouts/mainLayout-spec.md) con configuración independiente de header, sidebar, marca y navegación.

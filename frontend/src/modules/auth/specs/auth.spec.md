@@ -32,7 +32,7 @@ Este archivo añade responsabilidades frontend. Contratos HTTP, DTOs, cookies y 
 
 ## Contrato de interfaz
 
-- Usar diseño exacto de `frontend/DESIGN.md` y `frontend/dummy/index.html`, incluidos temas claro y oscuro.
+- Usar diseño exacto de `frontend/DESIGN.md`, incluidos temas claro y oscuro.
 - `LoginView` muestra únicamente acceso institucional mediante `LoginForm`.
 - `SessionView` muestra bienvenida, datos reales de `/me`, logout y catálogo de componentes tras iniciar sesión.
 - Identidad visible: TecNM, Tecnológico Nacional de México, Campus Monclova.
