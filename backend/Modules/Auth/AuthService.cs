@@ -56,7 +56,7 @@ public sealed class AuthService(
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString(CultureInfo.InvariantCulture)),
             new("username", user.Username),
             new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Name, user.Name)
+            new(JwtRegisteredClaimNames.Name, user.FullName)
         };
 
         foreach (var role in roles)
@@ -106,5 +106,5 @@ public sealed class AuthService(
     }
 
     private static UserResponse ToResponse(User user, string[] roles) =>
-        new(user.Id, user.Username, user.Email, user.Name, roles);
+        new(user.Id, user.Username, user.Email, user.FullName, roles);
 }

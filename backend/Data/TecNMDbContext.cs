@@ -33,7 +33,9 @@ public sealed class TecNMDbContext(DbContextOptions<TecNMDbContext> options) : D
         user.Property(item => item.Username).HasColumnName("username").HasMaxLength(64).IsRequired();
         user.Property(item => item.Email).HasColumnName("email").HasMaxLength(254).IsRequired();
         user.Property(item => item.PasswordHash).HasColumnName("password_hash").HasMaxLength(512).IsRequired();
-        user.Property(item => item.Name).HasColumnName("name").HasMaxLength(160).IsRequired();
+        user.Property(item => item.FirstName).HasColumnName("first_name").HasMaxLength(100).IsRequired();
+        user.Property(item => item.FirstSurname).HasColumnName("first_surname").HasMaxLength(70).IsRequired();
+        user.Property(item => item.SecondSurname).HasColumnName("second_surname").HasMaxLength(70);
         user.Property(item => item.IsActive).HasColumnName("is_active").IsRequired();
         user.Property(item => item.CreatedBy).HasColumnName("created_by");
         user.Property(item => item.UpdatedBy).HasColumnName("updated_by");

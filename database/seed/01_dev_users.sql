@@ -12,7 +12,7 @@ ON CONFLICT (name) DO UPDATE SET
     description = EXCLUDED.description;
 
 -- 2. Cuentas demo de desarrollo (contraseña: TecNM-Demo-2026!)
-INSERT INTO users (id, username, email, password_hash, name, is_active)
+INSERT INTO users (id, username, email, password_hash, first_name, first_surname, second_surname, is_active)
 OVERRIDING SYSTEM VALUE
 VALUES
     (
@@ -20,7 +20,9 @@ VALUES
         'admin',
         'admin@tecnm.local',
         'AQAAAAIAAYagAAAAEPjbneKeORd2reFIG62af0ufOMPtwf64j0jpBznNBo3Y8K/BUoUW+IhJOm0b5iqWOg==',
-        'Administrador Demo',
+        'Administrador',
+        'Sistema',
+        'Demo',
         true
     ),
     (
@@ -28,13 +30,17 @@ VALUES
         'usuario',
         'usuario@tecnm.local',
         'AQAAAAIAAYagAAAAECBhXWISKf+YayCz0xB8E4vyjO6chAfRLTq+f2eA4ztdtdDqA99jr+VsfZXUoKbfdQ==',
-        'Usuario Demo',
+        'Usuario',
+        'Estudiante',
+        'Demo',
         true
     )
 ON CONFLICT (username) DO UPDATE SET
     email = EXCLUDED.email,
     password_hash = EXCLUDED.password_hash,
-    name = EXCLUDED.name,
+    first_name = EXCLUDED.first_name,
+    first_surname = EXCLUDED.first_surname,
+    second_surname = EXCLUDED.second_surname,
     is_active = EXCLUDED.is_active;
 
 -- Sincronizar secuencia de users tras inserción con IDs explícitos

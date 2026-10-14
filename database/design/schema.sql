@@ -85,7 +85,9 @@ CREATE TABLE users (
     username varchar(64) NOT NULL,
     email varchar(254) NOT NULL,
     password_hash varchar(512) NOT NULL,
-    name varchar(160) NOT NULL,
+    first_name varchar(100) NOT NULL,
+    first_surname varchar(70) NOT NULL,
+    second_surname varchar(70) NULL,
     is_active boolean NOT NULL DEFAULT true,
     created_by bigint NULL,
     updated_by bigint NULL,
@@ -426,6 +428,13 @@ CREATE TABLE document_series (
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
     CONSTRAINT uq_document_series__type_year UNIQUE (document_type, current_year),
+    CONSTRAINT ck_document_series__type CHECK (
+        document_type IN (
+            'social_service_release_certificate',
+            'internship_release_certificate',
+            'school_services_act'
+        )
+    ),
     CONSTRAINT ck_document_series__year CHECK (current_year >= 2020),
     CONSTRAINT ck_document_series__sequence CHECK (current_sequence >= 0)
 );
@@ -466,7 +475,7 @@ CREATE TABLE expedient_documents (
         ON UPDATE CASCADE
         ON DELETE SET NULL,
     CONSTRAINT ck_expedient_documents__tramite CHECK (
-        tramite_type IN ('social_service', 'internship', 'residency', 'general')
+        tramite_type IN ('social_service', 'internship', 'general')
     ),
     CONSTRAINT ck_expedient_documents__status CHECK (
         status IN ('pending', 'approved', 'rejected', 'superseded')
@@ -542,11 +551,8 @@ CREATE TABLE social_services (
     required_hours integer NOT NULL DEFAULT 480,
     accumulated_hours integer NOT NULL DEFAULT 0,
     status varchar(32) NOT NULL DEFAULT 'requested',
-    presentation_letter_folio varchar(64) NULL,
     presentation_letter_date date NULL,
-    acceptance_letter_folio varchar(64) NULL,
     acceptance_letter_date date NULL,
-    termination_letter_folio varchar(64) NULL,
     termination_letter_date date NULL,
     original_termination_letter_received boolean NOT NULL DEFAULT false,
     release_certificate_folio varchar(64) NULL,
@@ -845,18 +851,15 @@ CREATE TABLE internships (
     start_date date NOT NULL,
     end_date date NOT NULL,
     schedule_description varchar(150) NOT NULL,
-    required_hours integer NOT NULL DEFAULT 480,
+    required_hours integer NOT NULL DEFAULT 200,
     completed_hours integer NOT NULL DEFAULT 0,
     status varchar(32) NOT NULL DEFAULT 'requested',
     credits_awarded integer NOT NULL DEFAULT 2,
-    presentation_letter_folio varchar(64) NULL,
     presentation_letter_date date NULL,
-    acceptance_letter_folio varchar(64) NULL,
     acceptance_letter_date date NULL,
-    assignment_order_folio varchar(64) NULL,
-    termination_letter_folio varchar(64) NULL,
     termination_letter_date date NULL,
     original_termination_letter_received boolean NOT NULL DEFAULT false,
+    release_certificate_folio varchar(64) NULL,
     release_date date NULL,
     released_at timestamp with time zone NULL,
     is_expedient_complete boolean NOT NULL DEFAULT false,
@@ -893,7 +896,7 @@ CREATE TABLE internships (
         ON DELETE SET NULL,
     CONSTRAINT ck_internships__semester CHECK (semester_enrolled BETWEEN 1 AND 15),
     CONSTRAINT ck_internships__dates CHECK (end_date >= start_date),
-    CONSTRAINT ck_internships__required_hours CHECK (required_hours BETWEEN 200 AND 480),
+    CONSTRAINT ck_internships__required_hours CHECK (required_hours BETWEEN 100 AND 480),
     CONSTRAINT ck_internships__completed_hours CHECK (completed_hours >= 0),
     CONSTRAINT ck_internships__status CHECK (
         status IN (
