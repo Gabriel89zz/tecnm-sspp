@@ -8,7 +8,7 @@ VALUES
     ('social_service_officer', 'Encargado(a) de Servicio Social'),
     ('internship_coordinator', 'Coordinador(a) de Prácticas Profesionales'),
     ('department_head', 'Jefe(a) de Departamento Académico')
-ON CONFLICT (name) DO UPDATE SET
+ON CONFLICT (name) WHERE deleted_at IS NULL DO UPDATE SET
     description = EXCLUDED.description;
 
 -- 2. Cuentas demo de desarrollo (contraseña: TecNM-Demo-2026!)
@@ -35,7 +35,7 @@ VALUES
         'Demo',
         true
     )
-ON CONFLICT (username) DO UPDATE SET
+ON CONFLICT (username) WHERE deleted_at IS NULL DO UPDATE SET
     email = EXCLUDED.email,
     password_hash = EXCLUDED.password_hash,
     first_name = EXCLUDED.first_name,
@@ -53,6 +53,6 @@ FROM users u
 CROSS JOIN roles r
 WHERE (u.username = 'admin' AND r.name = 'admin')
    OR (u.username = 'usuario' AND r.name = 'student')
-ON CONFLICT (user_id, role_id) DO NOTHING;
+ON CONFLICT (user_id, role_id) WHERE deleted_at IS NULL DO NOTHING;
 
 COMMIT;

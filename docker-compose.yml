@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tecnm_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tecnm_sspp}
+      POSTGRES_USER: ${POSTGRES_USER:-tecnm_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tecnm_dev_pass}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/design/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seed/01_dev_users.sql:/docker-entrypoint-initdb.d/02_dev_users.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tecnm_app} -d ${POSTGRES_DB:-tecnm_sspp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tecnm_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=${POSTGRES_DB:-tecnm_sspp};Username=${POSTGRES_USER:-tecnm_app};Password=${POSTGRES_PASSWORD:-tecnm_dev_pass}"
+      Jwt__SecretKey: ${Jwt__SecretKey:-TecNM_SSPP_Secret_Key_Dev_2026_Minimum_32_Bytes!}
+      Jwt__Issuer: "TecNM.Api"
+      Jwt__Audience: "TecNM.Frontend"
+      Jwt__LifetimeHours: "8"
+      Cors__AllowedOrigin: ${Cors__AllowedOrigin:-http://localhost:3000}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tecnm_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  pgdata:
+    name: tecnm_pgdata

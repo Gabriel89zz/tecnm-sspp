@@ -69,11 +69,10 @@ CREATE TABLE roles (
     deleted_by bigint NULL,
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_roles__name UNIQUE (name)
+    deleted_at timestamp with time zone NULL
 );
 
-CREATE INDEX idx_roles__name ON roles (name);
+CREATE UNIQUE INDEX uq_roles__name ON roles (name) WHERE deleted_at IS NULL;
 CREATE INDEX idx_roles__deleted_at ON roles (deleted_at);
 
 -- ----------------------------------------------------------------------------
@@ -94,13 +93,11 @@ CREATE TABLE users (
     deleted_by bigint NULL,
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_users__username UNIQUE (username),
-    CONSTRAINT uq_users__email UNIQUE (email)
+    deleted_at timestamp with time zone NULL
 );
 
-CREATE INDEX idx_users__username ON users (username);
-CREATE INDEX idx_users__email ON users (email);
+CREATE UNIQUE INDEX uq_users__username ON users (username) WHERE deleted_at IS NULL;
+CREATE UNIQUE INDEX uq_users__email ON users (email) WHERE deleted_at IS NULL;
 CREATE INDEX idx_users__deleted_at ON users (deleted_at);
 
 -- ----------------------------------------------------------------------------
@@ -117,7 +114,6 @@ CREATE TABLE user_roles (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_user_roles__user_role UNIQUE (user_id, role_id),
     CONSTRAINT fk_user_roles__users FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON UPDATE CASCADE
@@ -128,6 +124,7 @@ CREATE TABLE user_roles (
         ON DELETE RESTRICT
 );
 
+CREATE UNIQUE INDEX uq_user_roles__user_role ON user_roles (user_id, role_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_user_roles__user_id ON user_roles (user_id);
 CREATE INDEX idx_user_roles__role_id ON user_roles (role_id);
 CREATE INDEX idx_user_roles__deleted_at ON user_roles (deleted_at);
@@ -148,11 +145,10 @@ CREATE TABLE careers (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_careers__code UNIQUE (code),
     CONSTRAINT ck_careers__total_credits CHECK (total_credits > 0)
 );
 
-CREATE INDEX idx_careers__code ON careers (code);
+CREATE UNIQUE INDEX uq_careers__code ON careers (code) WHERE deleted_at IS NULL;
 CREATE INDEX idx_careers__deleted_at ON careers (deleted_at);
 
 -- ----------------------------------------------------------------------------
@@ -172,11 +168,10 @@ CREATE TABLE academic_periods (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_academic_periods__code UNIQUE (code),
     CONSTRAINT ck_academic_periods__dates CHECK (start_date <= end_date)
 );
 
-CREATE INDEX idx_academic_periods__code ON academic_periods (code);
+CREATE UNIQUE INDEX uq_academic_periods__code ON academic_periods (code) WHERE deleted_at IS NULL;
 CREATE INDEX idx_academic_periods__is_active ON academic_periods (is_active);
 CREATE INDEX idx_academic_periods__deleted_at ON academic_periods (deleted_at);
 
@@ -192,7 +187,7 @@ CREATE TABLE student_import_batches (
     total_records integer NOT NULL DEFAULT 0,
     imported_records integer NOT NULL DEFAULT 0,
     failed_records integer NOT NULL DEFAULT 0,
-    status varchar(32) NOT NULL DEFAULT 'completed',
+    status varchar(32) NOT NULL DEFAULT 'pending',
     notes text NULL,
     created_by bigint NULL,
     updated_by bigint NULL,
@@ -250,8 +245,6 @@ CREATE TABLE students (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_students__control_number UNIQUE (control_number),
-    CONSTRAINT uq_students__user_id UNIQUE (user_id),
     CONSTRAINT fk_students__users FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON UPDATE CASCADE
@@ -275,8 +268,8 @@ CREATE TABLE students (
     CONSTRAINT ck_students__progress CHECK (curriculum_progress_percentage BETWEEN 0.00 AND 100.00)
 );
 
-CREATE INDEX idx_students__control_number ON students (control_number);
-CREATE INDEX idx_students__user_id ON students (user_id);
+CREATE UNIQUE INDEX uq_students__control_number ON students (control_number) WHERE deleted_at IS NULL;
+CREATE UNIQUE INDEX uq_students__user_id ON students (user_id) WHERE user_id IS NOT NULL AND deleted_at IS NULL;
 CREATE INDEX idx_students__career_id ON students (career_id);
 CREATE INDEX idx_students__import_batch_id ON students (import_batch_id);
 CREATE INDEX idx_students__shift ON students (shift);
@@ -368,7 +361,6 @@ CREATE TABLE agreements (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_agreements__agreement_number UNIQUE (agreement_number),
     CONSTRAINT fk_agreements__companies FOREIGN KEY (company_id)
         REFERENCES companies (id)
         ON UPDATE CASCADE
@@ -379,8 +371,8 @@ CREATE TABLE agreements (
     CONSTRAINT ck_agreements__dates CHECK (expiration_date >= signed_date)
 );
 
+CREATE UNIQUE INDEX uq_agreements__agreement_number ON agreements (agreement_number) WHERE deleted_at IS NULL;
 CREATE INDEX idx_agreements__company_id ON agreements (company_id);
-CREATE INDEX idx_agreements__agreement_number ON agreements (agreement_number);
 CREATE INDEX idx_agreements__is_active ON agreements (is_active);
 CREATE INDEX idx_agreements__deleted_at ON agreements (deleted_at);
 
@@ -427,7 +419,6 @@ CREATE TABLE document_series (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_document_series__type_year UNIQUE (document_type, current_year),
     CONSTRAINT ck_document_series__type CHECK (
         document_type IN (
             'social_service_release_certificate',
@@ -439,7 +430,7 @@ CREATE TABLE document_series (
     CONSTRAINT ck_document_series__sequence CHECK (current_sequence >= 0)
 );
 
-CREATE INDEX idx_document_series__type_year ON document_series (document_type, current_year);
+CREATE UNIQUE INDEX uq_document_series__type_year ON document_series (document_type, current_year) WHERE deleted_at IS NULL;
 CREATE INDEX idx_document_series__deleted_at ON document_series (deleted_at);
 
 -- ----------------------------------------------------------------------------
@@ -511,7 +502,6 @@ CREATE TABLE social_service_programs (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_ss_programs__code UNIQUE (code),
     CONSTRAINT ck_ss_programs__category CHECK (
         category IN (
             'community_development',
@@ -527,7 +517,7 @@ CREATE TABLE social_service_programs (
     )
 );
 
-CREATE INDEX idx_ss_programs__code ON social_service_programs (code);
+CREATE UNIQUE INDEX uq_ss_programs__code ON social_service_programs (code) WHERE deleted_at IS NULL;
 CREATE INDEX idx_ss_programs__category ON social_service_programs (category);
 CREATE INDEX idx_ss_programs__deleted_at ON social_service_programs (deleted_at);
 
@@ -654,7 +644,6 @@ CREATE TABLE social_service_applications (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_ss_applications__service_id UNIQUE (social_service_id),
     CONSTRAINT fk_ss_applications__social_services FOREIGN KEY (social_service_id)
         REFERENCES social_services (id)
         ON UPDATE CASCADE
@@ -663,7 +652,7 @@ CREATE TABLE social_service_applications (
     CONSTRAINT ck_ss_applications__semester CHECK (current_semester BETWEEN 1 AND 15)
 );
 
-CREATE INDEX idx_ss_applications__social_service_id ON social_service_applications (social_service_id);
+CREATE UNIQUE INDEX uq_ss_applications__service_id ON social_service_applications (social_service_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_ss_applications__deleted_at ON social_service_applications (deleted_at);
 
 -- ----------------------------------------------------------------------------
@@ -687,14 +676,13 @@ CREATE TABLE social_service_commitments (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_ss_commitments__service_id UNIQUE (social_service_id),
     CONSTRAINT fk_ss_commitments__social_services FOREIGN KEY (social_service_id)
         REFERENCES social_services (id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 );
 
-CREATE INDEX idx_ss_commitments__social_service_id ON social_service_commitments (social_service_id);
+CREATE UNIQUE INDEX uq_ss_commitments__service_id ON social_service_commitments (social_service_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_ss_commitments__deleted_at ON social_service_commitments (deleted_at);
 
 -- ----------------------------------------------------------------------------
@@ -721,7 +709,6 @@ CREATE TABLE social_service_bi_monthly_reports (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_ss_reports__service_number UNIQUE (social_service_id, report_number),
     CONSTRAINT fk_ss_bi_monthly_reports__social_services FOREIGN KEY (social_service_id)
         REFERENCES social_services (id)
         ON UPDATE CASCADE
@@ -737,7 +724,7 @@ CREATE TABLE social_service_bi_monthly_reports (
     CONSTRAINT ck_ss_reports__status CHECK (status IN ('submitted', 'approved', 'rejected'))
 );
 
-CREATE INDEX idx_ss_reports__service_number ON social_service_bi_monthly_reports (social_service_id, report_number);
+CREATE UNIQUE INDEX uq_ss_reports__service_number ON social_service_bi_monthly_reports (social_service_id, report_number) WHERE deleted_at IS NULL;
 CREATE INDEX idx_ss_reports__supervisor_id ON social_service_bi_monthly_reports (evaluator_supervisor_id);
 CREATE INDEX idx_ss_reports__status ON social_service_bi_monthly_reports (status);
 CREATE INDEX idx_ss_reports__deleted_at ON social_service_bi_monthly_reports (deleted_at);
@@ -767,7 +754,6 @@ CREATE TABLE social_service_evaluations (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_ss_evaluations__service_type_period UNIQUE (social_service_id, evaluator_type, bimonthly_period),
     CONSTRAINT fk_ss_evaluations__social_services FOREIGN KEY (social_service_id)
         REFERENCES social_services (id)
         ON UPDATE CASCADE
@@ -787,6 +773,7 @@ CREATE TABLE social_service_evaluations (
     CONSTRAINT ck_ss_evaluations__c7 CHECK (criterion_7 IN ('insufficient', 'sufficient', 'good', 'notable', 'excellent'))
 );
 
+CREATE UNIQUE INDEX uq_ss_evaluations__service_type_period ON social_service_evaluations (social_service_id, evaluator_type, bimonthly_period) WHERE deleted_at IS NULL;
 CREATE INDEX idx_ss_evaluations__service_id ON social_service_evaluations (social_service_id);
 CREATE INDEX idx_ss_evaluations__supervisor_id ON social_service_evaluations (evaluator_supervisor_id);
 CREATE INDEX idx_ss_evaluations__deleted_at ON social_service_evaluations (deleted_at);
@@ -813,7 +800,6 @@ CREATE TABLE social_service_activity_assessments (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_ss_activity_assessments__service_id UNIQUE (social_service_id),
     CONSTRAINT fk_ss_activity_assessments__social_services FOREIGN KEY (social_service_id)
         REFERENCES social_services (id)
         ON UPDATE CASCADE
@@ -828,7 +814,7 @@ CREATE TABLE social_service_activity_assessments (
     CONSTRAINT ck_ss_act_q8 CHECK (question_8 IN ('insufficient', 'sufficient', 'good', 'notable', 'excellent'))
 );
 
-CREATE INDEX idx_ss_activity_assessments__social_service_id ON social_service_activity_assessments (social_service_id);
+CREATE UNIQUE INDEX uq_ss_activity_assessments__service_id ON social_service_activity_assessments (social_service_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_ss_activity_assessments__deleted_at ON social_service_activity_assessments (deleted_at);
 
 -- ============================================================================
@@ -896,7 +882,7 @@ CREATE TABLE internships (
         ON DELETE SET NULL,
     CONSTRAINT ck_internships__semester CHECK (semester_enrolled BETWEEN 1 AND 15),
     CONSTRAINT ck_internships__dates CHECK (end_date >= start_date),
-    CONSTRAINT ck_internships__required_hours CHECK (required_hours BETWEEN 100 AND 480),
+    CONSTRAINT ck_internships__required_hours CHECK (required_hours BETWEEN 200 AND 480),
     CONSTRAINT ck_internships__completed_hours CHECK (completed_hours >= 0),
     CONSTRAINT ck_internships__status CHECK (
         status IN (
@@ -946,7 +932,6 @@ CREATE TABLE internship_evaluations (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_internship_evaluations__internship_id UNIQUE (internship_id),
     CONSTRAINT fk_internship_evaluations__internships FOREIGN KEY (internship_id)
         REFERENCES internships (id)
         ON UPDATE CASCADE
@@ -969,7 +954,7 @@ CREATE TABLE internship_evaluations (
     )
 );
 
-CREATE INDEX idx_internship_evaluations__internship_id ON internship_evaluations (internship_id);
+CREATE UNIQUE INDEX uq_internship_evaluations__internship_id ON internship_evaluations (internship_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_internship_evaluations__supervisor_id ON internship_evaluations (evaluator_supervisor_id);
 CREATE INDEX idx_internship_evaluations__deleted_at ON internship_evaluations (deleted_at);
 
@@ -1032,7 +1017,6 @@ CREATE TABLE non_conformances (
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at timestamp with time zone NULL,
-    CONSTRAINT uq_non_conformances__incident_code UNIQUE (incident_code),
     CONSTRAINT fk_non_conformances__students FOREIGN KEY (student_id)
         REFERENCES students (id)
         ON UPDATE CASCADE
@@ -1056,7 +1040,7 @@ CREATE TABLE non_conformances (
     )
 );
 
-CREATE INDEX idx_non_conformances__incident_code ON non_conformances (incident_code);
+CREATE UNIQUE INDEX uq_non_conformances__incident_code ON non_conformances (incident_code) WHERE deleted_at IS NULL;
 CREATE INDEX idx_non_conformances__tramite ON non_conformances (tramite_type, tramite_id);
 CREATE INDEX idx_non_conformances__student_id ON non_conformances (student_id);
 CREATE INDEX idx_non_conformances__period_id ON non_conformances (period_id);
@@ -1064,3 +1048,5 @@ CREATE INDEX idx_non_conformances__status ON non_conformances (status);
 CREATE INDEX idx_non_conformances__deleted_at ON non_conformances (deleted_at);
 
 COMMIT;
+
+
