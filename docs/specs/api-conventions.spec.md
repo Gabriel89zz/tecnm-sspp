@@ -10,7 +10,7 @@ Fuente canónica compartida por backend y frontend para todos los módulos poste
 | --- | --- | --- |
 | Auth | [auth.spec.md](./auth.spec.md) | Implementado |
 | Usuarios y roles | [users.spec.md](./users.spec.md) | 1 |
-| Catálogos base | [catalogs.spec.md](./catalogs.spec.md) | 2 |
+| Catálogos base | [catalogs.spec.md](./catalogs.spec.md) | Implementado |
 | Empresas, supervisores y convenios | [companies.spec.md](./companies.spec.md) | 3 |
 | Estudiantes e importación | [students.spec.md](./students.spec.md) | 4 |
 | Expediente documental | [documents.spec.md](./documents.spec.md) | 5 |

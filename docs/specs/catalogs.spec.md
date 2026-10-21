@@ -1,6 +1,6 @@
 # Contrato: Catálogos base
 
-> **Estado:** Borrador v0.1. Convenciones en [api-conventions.spec.md](./api-conventions.spec.md). Tablas: `careers`, `academic_periods`, `social_service_programs`, `institutional_authorities`, `document_series`.
+> **Estado:** Implementado v1.0. Convenciones en [api-conventions.spec.md](./api-conventions.spec.md). Tablas: `careers`, `academic_periods`, `social_service_programs`, `institutional_authorities`, `document_series`.
 
 ## Acceso
 
