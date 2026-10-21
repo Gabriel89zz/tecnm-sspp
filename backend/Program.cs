@@ -41,13 +41,26 @@ if (string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(audience) || 
         "Jwt:Issuer, Jwt:Audience y Jwt:LifetimeHours=8 son obligatorios.");
 }
 
-var allowedOrigin = configuration["Cors:AllowedOrigin"]?.TrimEnd('/');
-if (string.IsNullOrWhiteSpace(allowedOrigin)
-    || !Uri.TryCreate(allowedOrigin, UriKind.Absolute, out var originUri)
-    || originUri.Scheme != Uri.UriSchemeHttps)
+var rawAllowedOrigins = configuration["Cors:AllowedOrigin"];
+var allowedOrigins = (rawAllowedOrigins ?? "")
+    .Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    .Select(o => o.TrimEnd('/'))
+    .ToArray();
+
+if (allowedOrigins.Length == 0)
 {
     throw new InvalidOperationException(
-        "Cors__AllowedOrigin debe ser un origen HTTPS absoluto.");
+        "Cors__AllowedOrigin es obligatorio.");
+}
+
+foreach (var origin in allowedOrigins)
+{
+    if (!Uri.TryCreate(origin, UriKind.Absolute, out var originUri)
+        || (originUri.Scheme != Uri.UriSchemeHttps && !originUri.IsLoopback))
+    {
+        throw new InvalidOperationException(
+            $"El origen CORS '{origin}' debe ser un origen HTTPS absoluto o loopback local.");
+    }
 }
 
 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
@@ -82,7 +95,7 @@ builder.Services.AddScoped<AgreementsService>();
 builder.Services.AddScoped<PasswordHasher<User>>();
 builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddCors(options => options.AddPolicy(FrontendCors, policy =>
-    policy.WithOrigins(allowedOrigin).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
+    policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
