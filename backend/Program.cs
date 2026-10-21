@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TecNM.Api.Core.Entities;
+using TecNM.Api.Core.Http;
+using TecNM.Api.Core.Security;
 using TecNM.Api.Data;
 using TecNM.Api.Modules.Auth;
+using TecNM.Api.Modules.Catalogs;
 
 const string FrontendCors = "Frontend";
 
@@ -49,9 +52,26 @@ if (string.IsNullOrWhiteSpace(allowedOrigin)
 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 var jwtSettings = new JwtSettings(issuer, audience, lifetimeHours.Value, signingKey);
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddScoped<AuditInterceptor>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddControllers();
-builder.Services.AddDbContext<TecNMDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddDbContext<TecNMDbContext>((serviceProvider, options) =>
+{
+    var auditInterceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
+    options.UseNpgsql(connectionString)
+           .AddInterceptors(auditInterceptor);
+});
+
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CareersService>();
+builder.Services.AddScoped<AcademicPeriodsService>();
+
 builder.Services.AddScoped<PasswordHasher<User>>();
 builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddCors(options => options.AddPolicy(FrontendCors, policy =>
@@ -99,6 +119,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCors(FrontendCors);
 app.UseAuthentication();
