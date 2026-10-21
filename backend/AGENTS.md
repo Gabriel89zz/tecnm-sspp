@@ -37,10 +37,21 @@ dotnet run --project backend/TecNM.Api.csproj
 
 Prueba de humo prevista: `curl` con cookie jar sobre HTTPS. Debe cubrir login inválido, login válido, `/me`, logout y `/me` posterior.
 
-## Mapa
+## Mapa de Módulos (Vertical Slices)
 
-- [`Core/Entities/`](./Core/Entities/): entidades compartidas; `User` será entidad inicial.
-- [`Data/`](./Data/): `TecNMDbContext` y mapeo PostgreSQL.
-- [`Modules/Auth/`](./Modules/Auth/): controller, service y DTOs del slice.
-- [`Modules/Auth/specs/`](./Modules/Auth/specs/): contexto backend de Auth.
-- [Contrato raíz](../docs/specs/auth.spec.md): única fuente de verdad compartida.
+- [`Core/Entities/`](./Core/Entities/): entidades de dominio compartidas POCO (`AuditableEntity`, `User`, `Role`, `Career`, etc.).
+- [`Core/Http/`](./Core/Http/): utilidades HTTP (`Paging.cs`, `GlobalExceptionHandler.cs`).
+- [`Core/Security/`](./Core/Security/): `CurrentUser.cs` (extracción de claims JWT).
+- [`Data/`](./Data/): `TecNMDbContext`, `AuditInterceptor.cs` y configuraciones desacopladas en [`Data/Configurations/`](./Data/Configurations/).
+- [`Modules/Auth/`](./Modules/Auth/): autenticación JWT con cookies HttpOnly y spec en [`Modules/Auth/specs/`](./Modules/Auth/specs/auth.spec.md).
+- [`Modules/Catalogs/`](./Modules/Catalogs/): carreras, periodos, programas SS, autoridades y folios con spec en [`Modules/Catalogs/specs/`](./Modules/Catalogs/specs/catalogs.spec.md).
+- [`Modules/Users/`](./Modules/Users/): gestión de usuarios y roles con spec en [`Modules/Users/specs/`](./Modules/Users/specs/users.spec.md).
+- [`Modules/Companies/`](./Modules/Companies/): empresas, supervisores y convenios con spec en [`Modules/Companies/specs/`](./Modules/Companies/specs/companies.spec.md).
+- [`Modules/Students/`](./Modules/Students/): padrón, elegibilidad e importación con spec en [`Modules/Students/specs/`](./Modules/Students/specs/students.spec.md).
+- [`Modules/Expedients/`](./Modules/Expedients/): expediente documental y almacenamiento con spec en [`Modules/Expedients/specs/`](./Modules/Expedients/specs/documents.spec.md).
+- [`Modules/SocialService/`](./Modules/SocialService/): trámite de Servicio Social (Anexos XVIII–XXV) con spec en [`Modules/SocialService/specs/`](./Modules/SocialService/specs/social-service.spec.md).
+- [`Modules/Internships/`](./Modules/Internships/): trámite de Prácticas Profesionales (Anexo XVII) con spec en [`Modules/Internships/specs/`](./Modules/Internships/specs/internships.spec.md).
+- [`Modules/Quality/`](./Modules/Quality/): trazabilidad y Producto No Conforme (PNC) con spec en [`Modules/Quality/specs/`](./Modules/Quality/specs/quality.spec.md).
+- [`Modules/Reports/`](./Modules/Reports/): indicadores institucionales y vistas SQL con spec en [`Modules/Reports/specs/`](./Modules/Reports/specs/reports.spec.md).
+
+Contratos compartidos raíz: directorio [`docs/specs/`](../docs/specs/). Única fuente canónica de verdad.
