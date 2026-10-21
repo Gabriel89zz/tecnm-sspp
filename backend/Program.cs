@@ -71,6 +71,9 @@ builder.Services.AddDbContext<TecNMDbContext>((serviceProvider, options) =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CareersService>();
 builder.Services.AddScoped<AcademicPeriodsService>();
+builder.Services.AddScoped<SocialServiceProgramsService>();
+builder.Services.AddScoped<InstitutionalAuthoritiesService>();
+builder.Services.AddScoped<DocumentSeriesService>();
 
 builder.Services.AddScoped<PasswordHasher<User>>();
 builder.Services.AddSingleton(jwtSettings);

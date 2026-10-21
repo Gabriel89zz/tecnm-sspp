@@ -11,8 +11,8 @@
 | :---: | :--- | :--- | :---: |
 | **0** | **Infraestructura & Auth** | Docker Compose (3 servicios), PostgreSQL 16 (24 tablas), Auth JWT con cookies HttpOnly. | **100% Hecho** |
 | **1** | **Fundaciones & Catálogos Base** | `AuditableEntity`, Soft Delete global, RFC 7807 ProblemDetails, Carreras y Periodos. | **100% Hecho** |
-| **2** | **Catálogos Restantes & Folios** | Programas SS, Autoridades Institucionales, Series de Folio atómicas. | **En curso** |
-| **3** | **Empresas & Convenios** | Directorio de empresas, supervisores externos y convenios de colaboración. | Pendiente |
+| **2** | **Catálogos Restantes & Folios** | Programas SS, Autoridades Institucionales, Series de Folio atómicas. | **100% Hecho** |
+| **3** | **Empresas & Convenios** | Directorio de empresas, supervisores externos y convenios de colaboración. | **Siguiente** |
 | **4** | **Estudiantes & Padrón** | Expediente de alumno, validación IMSS, importador Excel masivo. | Pendiente |
 | **5** | **Expediente Documental** | Almacenamiento local, subida de PDFs, estados de revisión y versionado. | Pendiente |
 | **6** | **Servicio Social (SS)** | Trámite completo (480 h), Anexos XVIII–XXV, 3 reportes bimestrales y liberación. | Pendiente |
@@ -36,10 +36,11 @@
 - [x] Catálogo **Carreras** (`/api/careers`): CRUD, regex de clave, toggle de estado y `/options`.
 - [x] Catálogo **Periodos Académicos** (`/api/academic-periods`): CRUD, activación transaccional única y `/current`.
 
-### Fase 2: Catálogos Restantes & Motor de Folios (Sprint Actual)
-- [ ] **Programas de Servicio Social** (`/api/social-service-programs`): 9 categorías oficiales, flag `is_internal`.
-- [ ] **Autoridades Institucionales** (`/api/institutional-authorities`): cargos oficiales, regla de una autoridad activa por puesto y endpoint `/active` para generador de constancias.
-- [ ] **Series de Folio** (`/api/document-series`): incremento atómico (`SELECT FOR UPDATE`), prevención de rollback y vista previa de folios con tokens (`{PREFIX}{SEQ:4}/{DD}/{MM}/{YYYY}`).
+### Fase 2: Catálogos Restantes & Motor de Folios
+- [x] **Programas de Servicio Social** (`/api/social-service-programs`): 9 categorías oficiales, flag `is_internal`.
+- [x] **Autoridades Institucionales** (`/api/institutional-authorities`): cargos oficiales, regla de una autoridad activa por puesto y endpoint `/active` para generador de constancias.
+- [x] **Series de Folio** (`/api/document-series`): incremento atómico (`SELECT FOR UPDATE`), prevención de rollback y vista previa de folios con tokens (`{PREFIX}{SEQ:4}/{DD}/{MM}/{YYYY}`).
+- [x] **Semilla oficial de catálogos** ([`database/seed/02_dev_catalogs.sql`](../../database/seed/02_dev_catalogs.sql)) con datos reales del ITSM (6 carreras, 3 periodos, 9 programas normativos, 4 autoridades, 3 series de folio).
 
 ### Fase 3: Empresas, Supervisores y Convenios
 - [ ] Módulo **Empresas** (`/api/companies`): sectores (público, privado, social, educativo), tamaños y receptores TecNM internos.
