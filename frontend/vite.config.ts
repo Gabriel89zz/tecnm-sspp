@@ -5,8 +5,15 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [vue(), basicSsl()],
   server: {
-    host: 'localhost',
-    port: 5173,
+    host: '127.0.0.1',
+    port: 5900,
     strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 })

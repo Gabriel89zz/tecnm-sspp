@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { authRoutes, authenticatedAuthRoutes } from '../../modules/auth'
+import { catalogsRoutes } from '../../modules/catalogs'
 import {
   clearSessionMarker,
   hasActiveSession,
@@ -14,9 +15,13 @@ const router = createRouter({
       path: '/',
       component: () => import('../layouts/MainLayout.vue'),
       meta: { requiresAuth: true },
-      children: authenticatedAuthRoutes,
+      children: [
+        ...authenticatedAuthRoutes,
+        ...catalogsRoutes,
+      ],
     },
   ],
+
   scrollBehavior(to, _from, savedPosition) {
     return savedPosition ?? (to.hash ? { el: to.hash, top: 24 } : { top: 0 })
   },

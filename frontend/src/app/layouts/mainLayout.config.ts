@@ -9,27 +9,22 @@ export const mainLayoutConfig = {
 }
 
 export const headerNavigation: NavigationItem[] = [
-  { label: 'Inicio', to: '/' },
-  { label: 'Componentes', children: [
-    { label: 'Paleta', to: '/#colores' },
-    { label: 'Controles', to: '/#controles' },
-    { label: 'Mensajes', to: '/#mensajes' },
+  { label: 'Panel Principal', to: '/' },
+  { label: 'Catálogos', children: [
+    { label: 'Carreras', to: '/catalogs/careers' },
   ] },
-  { label: 'Ejemplo de datos', to: '/#datos' },
+  { label: 'Trámites Recientes', to: '/#tramites' },
+  { label: 'Calendario', to: '/#calendario' },
 ]
 
 export const sidebarNavigation: NavigationItem[] = [
-  { label: 'Mi cuenta', to: '/#cuenta' },
-  { label: 'Biblioteca visual', children: [
-    { label: 'Colores', to: '/#colores' },
-    { label: 'Botones', to: '/#botones' },
-    { label: 'Controles', to: '/#controles' },
-    { label: 'Mensajes y estados', to: '/#mensajes' },
+  { label: 'Panel Principal', to: '/' },
+  { label: 'Catálogos Institucionales', children: [
+    { label: 'Carreras', to: '/catalogs/careers' },
   ] },
-  { label: 'Datos y presentación', children: [
-    { label: 'Tarjetas y datos', to: '/#datos' },
-    { label: 'Tabla', to: '/#tabla' },
-    { label: 'Tipografía', to: '/#tipografia' },
-    { label: 'Elevación', to: '/#elevacion' },
+  { label: 'Gestión Operativa', children: [
+    { label: 'Trámites en Curso', to: '/#tramites' },
+    { label: 'Avisos & Calendario', to: '/#calendario' },
+    { label: 'Acciones Rápidas', to: '/#accesos' },
   ] },
 ]

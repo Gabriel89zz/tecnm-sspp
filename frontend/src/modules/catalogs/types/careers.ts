@@ -1,0 +1,35 @@
+export interface Career {
+  id: number
+  code: string
+  name: string
+  totalCredits: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CareerRequest {
+  code: string
+  name: string
+  totalCredits: number
+}
+
+export interface UpdateStatusRequest {
+  isActive: boolean
+}
+
+export interface PagedResponse<T> {
+  items: T[]
+  page: number
+  pageSize: number
+  totalItems: number
+  totalPages: number
+}
+
+export interface CareerFilterParams {
+  page?: number
+  pageSize?: number
+  search?: string
+  isActive?: boolean | null
+  sort?: string
+}
