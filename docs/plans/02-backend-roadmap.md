@@ -12,8 +12,8 @@
 | **0** | **Infraestructura & Auth** | Docker Compose (3 servicios), PostgreSQL 16 (24 tablas), Auth JWT con cookies HttpOnly. | **100% Hecho** |
 | **1** | **Fundaciones & Catálogos Base** | `AuditableEntity`, Soft Delete global, RFC 7807 ProblemDetails, Carreras y Periodos. | **100% Hecho** |
 | **2** | **Catálogos Restantes & Folios** | Programas SS, Autoridades Institucionales, Series de Folio atómicas. | **100% Hecho** |
-| **3** | **Empresas & Convenios** | Directorio de empresas, supervisores externos y convenios de colaboración. | **Siguiente** |
-| **4** | **Estudiantes & Padrón** | Expediente de alumno, validación IMSS, importador Excel masivo. | Pendiente |
+| **3** | **Empresas & Convenios** | Directorio de empresas, supervisores externos y convenios de colaboración. | **100% Hecho** |
+| **4** | **Estudiantes & Padrón** | Expediente de alumno, validación IMSS, importador Excel masivo. | **Siguiente** |
 | **5** | **Expediente Documental** | Almacenamiento local, subida de PDFs, estados de revisión y versionado. | Pendiente |
 | **6** | **Servicio Social (SS)** | Trámite completo (480 h), Anexos XVIII–XXV, 3 reportes bimestrales y liberación. | Pendiente |
 | **7** | **Prácticas Profesionales (PP)** | Trámite completo (200–480 h), evaluación Anexo XVII y acreditación. | Pendiente |
@@ -43,10 +43,11 @@
 - [x] **Semilla oficial de catálogos** ([`database/seed/02_dev_catalogs.sql`](../../database/seed/02_dev_catalogs.sql)) con datos reales del ITSM (6 carreras, 3 periodos, 9 programas normativos, 4 autoridades, 3 series de folio).
 
 ### Fase 3: Empresas, Supervisores y Convenios
-- [ ] Módulo **Empresas** (`/api/companies`): sectores (público, privado, social, educativo), tamaños y receptores TecNM internos.
-- [ ] Módulo **Supervisores** (`/api/companies/{id}/supervisors`): vinculados a su empresa receptora.
-- [ ] Módulo **Convenios** (`/api/agreements`): tipos de convenio, control de vigencia y fechas de inicio/fin.
-- [ ] Regla de integridad: supervisor y convenio del trámite deben pertenecer a la misma empresa.
+- [x] Módulo **Empresas** (`/api/companies`): sectores (público, privado, social, educativo), tamaños y receptores TecNM internos.
+- [x] Módulo **Supervisores** (`/api/companies/{id}/supervisors`): vinculados a su empresa receptora.
+- [x] Módulo **Convenios** (`/api/agreements`): tipos de convenio, control de vigencia dinámico y fechas de inicio/fin, subida y descarga de PDF.
+- [x] Semilla oficial de empresas, supervisores y convenios ([`database/seed/03_dev_companies.sql`](../../database/seed/03_dev_companies.sql)).
+- [x] Regla de integridad: supervisor y convenio del trámite deben pertenecer a la misma empresa.
 
 ### Fase 4: Estudiantes, IMSS e Importación Masiva
 - [ ] Módulo **Estudiantes** (`/api/students`): expediente completo, número de control, CURP y semestre.

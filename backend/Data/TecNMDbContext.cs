@@ -13,6 +13,9 @@ public sealed class TecNMDbContext(DbContextOptions<TecNMDbContext> options) : D
     public DbSet<SocialServiceProgram> SocialServicePrograms => Set<SocialServiceProgram>();
     public DbSet<InstitutionalAuthority> InstitutionalAuthorities => Set<InstitutionalAuthority>();
     public DbSet<DocumentSeries> DocumentSeries => Set<DocumentSeries>();
+    public DbSet<Company> Companies => Set<Company>();
+    public DbSet<CompanySupervisor> CompanySupervisors => Set<CompanySupervisor>();
+    public DbSet<Agreement> Agreements => Set<Agreement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
